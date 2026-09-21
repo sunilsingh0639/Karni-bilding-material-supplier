@@ -1,0 +1,53 @@
+.slider {
+  position: relative; overflow: hidden; border-radius: var(--radius-xl);
+  aspect-ratio: 16/7; background: var(--charcoal);
+}
+.slider__track {
+  display: flex; height: 100%;
+  transition: transform 0.65s cubic-bezier(0.4,0,0.2,1);
+  will-change: transform;
+}
+.slider__slide { flex: 0 0 100%; position: relative; overflow: hidden; }
+.slider__slide img { width: 100%; height: 100%; object-fit: cover; }
+.slider__overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.15) 60%, rgba(0,0,0,0.3) 100%);
+}
+.slider__btn {
+  position: absolute; top: 50%; transform: translateY(-50%);
+  width: 44px; height: 44px; border-radius: 50%;
+  background: rgba(255,255,255,0.9); color: var(--charcoal);
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: var(--shadow-md); transition: all var(--transition-fast);
+  z-index: 2;
+}
+.slider__btn:hover { background: #fff; transform: translateY(-50%) scale(1.05); }
+.slider__btn--prev { left: 16px; }
+.slider__btn--next { right: 16px; }
+.slider__dots {
+  position: absolute; bottom: 16px; left: 50%; transform: translateX(-50%);
+  display: flex; gap: 8px; z-index: 2; align-items: center;
+}
+.slider__dot {
+  display: flex; align-items: center; gap: 6px;
+  padding: 5px 10px; border-radius: var(--radius-full);
+  background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3);
+  transition: all var(--transition-fast);
+}
+.slider__dot.active { background: rgba(255,255,255,0.9); }
+.slider__dot-label {
+  font-size: 0.7rem; font-weight: 700; color: rgba(255,255,255,0.9);
+  letter-spacing: 0.05em; white-space: nowrap;
+}
+.slider__dot.active .slider__dot-label { color: var(--charcoal); }
+
+@media (max-width: 768px) {
+  .slider { border-radius: 0; aspect-ratio: 4/3; }
+  .slider__btn { width: 36px; height: 36px; }
+  .slider__dot-label { display: none; }
+  .slider__dot { width: 8px; height: 8px; padding: 0; border-radius: 50%; }
+  .slider__dot.active { width: 24px; border-radius: 4px; }
+}
+@media (max-width: 480px) {
+  .slider { aspect-ratio: 3/4; }
+}

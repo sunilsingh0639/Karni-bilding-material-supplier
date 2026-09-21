@@ -1,0 +1,44 @@
+.about-hero { padding: 80px 0; background: var(--off-white); }
+.about-hero .container { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
+.about-hero__content { display: flex; flex-direction: column; gap: 16px; }
+.about-hero__content h1 { font-size: clamp(1.8rem, 3.5vw, 2.8rem); }
+.about-hero__actions { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 8px; }
+.about-hero__img { border-radius: var(--radius-xl); overflow: hidden; aspect-ratio: 4/3; }
+.about-hero__img img { width: 100%; height: 100%; object-fit: cover; }
+
+/* Ganveer section */
+.ganveer-section { display: grid; grid-template-columns: 340px 1fr; gap: 56px; align-items: center; }
+.ganveer-photo {
+  border-radius: var(--radius-xl); overflow: hidden;
+  aspect-ratio: 3/4; box-shadow: var(--shadow-xl);
+  border: 4px solid var(--sand);
+}
+.ganveer-photo img { width: 100%; height: 100%; object-fit: cover; }
+.ganveer-info { display: flex; flex-direction: column; gap: 14px; }
+.ganveer-info h2 { font-size: clamp(1.8rem, 3vw, 2.6rem); }
+.ganveer-tagline { font-size: 1rem; font-weight: 600; color: var(--accent); }
+.ganveer-contact { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 8px; }
+
+.about-story { max-width: 720px; margin: 0 auto; display: flex; flex-direction: column; gap: 16px; }
+.about-story h2 { margin-bottom: 8px; }
+
+.value-card { padding: 28px; display: flex; flex-direction: column; gap: 12px; }
+.value-card__icon {
+  width: 52px; height: 52px; border-radius: var(--radius-md);
+  background: rgba(200,134,10,0.1); color: var(--accent);
+  display: flex; align-items: center; justify-content: center;
+}
+.value-card h4 { font-size: 1rem; }
+.value-card p { font-size: 0.875rem; color: var(--text-muted); }
+
+.about-cta { text-align: center; display: flex; flex-direction: column; align-items: center; gap: 16px; }
+.about-cta__actions { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin-top: 8px; }
+
+@media (max-width: 1024px) {
+  .ganveer-section { grid-template-columns: 260px 1fr; gap: 40px; }
+}
+@media (max-width: 768px) {
+  .about-hero .container { grid-template-columns: 1fr; gap: 32px; }
+  .ganveer-section { grid-template-columns: 1fr; gap: 32px; }
+  .ganveer-photo { max-width: 280px; margin: 0 auto; aspect-ratio: 1/1; }
+}

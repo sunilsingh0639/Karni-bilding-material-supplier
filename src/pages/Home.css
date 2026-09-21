@@ -1,0 +1,80 @@
+.features-section { background: var(--off-white); }
+.features-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+.feature-card {
+  display: flex; align-items: flex-start; gap: 14px;
+  background: #fff; padding: 20px; border-radius: var(--radius-lg);
+  border: 1px solid var(--border); box-shadow: var(--shadow-sm);
+}
+.feature-card__icon {
+  width: 44px; height: 44px; border-radius: var(--radius-md);
+  background: rgba(200,134,10,0.1); color: var(--accent);
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.feature-card h4 { font-size: 0.95rem; margin-bottom: 4px; }
+.feature-card p { font-size: 0.82rem; color: var(--text-muted); line-height: 1.5; }
+
+.products-grid { margin-bottom: 40px; }
+.section-cta { text-align: center; }
+
+/* About snippet */
+.about-snippet { background: var(--off-white); }
+.about-snippet__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
+.about-snippet__img { border-radius: var(--radius-xl); overflow: hidden; aspect-ratio: 4/3; }
+.about-snippet__img img { width: 100%; height: 100%; object-fit: cover; }
+.about-snippet__content { display: flex; flex-direction: column; gap: 16px; }
+.about-snippet__content h2 { margin-bottom: 0; }
+.about-snippet__actions { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 8px; }
+
+/* Reviews */
+.reviews-section { background: var(--warm-white); }
+.reviews-scroll { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+.review-card { padding: 24px; display: flex; flex-direction: column; gap: 12px; }
+.review-card__stars { display: flex; gap: 2px; }
+.review-card__text { font-size: 0.9rem; color: var(--text-secondary); line-height: 1.6; flex: 1; font-style: italic; }
+.review-card__author { display: flex; flex-direction: column; gap: 2px; }
+.review-card__name { font-size: 0.875rem; font-weight: 700; }
+.review-card__loc { display: flex; align-items: center; gap: 4px; font-size: 0.75rem; color: var(--text-muted); }
+
+/* CTA Banner */
+.cta-banner { background: var(--charcoal); padding: 64px 0; }
+.cta-banner__inner { display: flex; align-items: center; justify-content: space-between; gap: 32px; flex-wrap: wrap; }
+.cta-banner__inner h2 { color: #fff; margin-bottom: 8px; }
+.cta-banner__inner p { color: rgba(255,255,255,0.7); }
+.cta-banner__actions { display: flex; gap: 12px; flex-wrap: wrap; }
+
+/* Contact */
+.contact-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 40px; align-items: start; }
+.contact-info { display: flex; flex-direction: column; gap: 20px; }
+.contact-item { display: flex; gap: 14px; align-items: flex-start; }
+.contact-item__icon {
+  width: 40px; height: 40px; border-radius: var(--radius-md);
+  background: rgba(200,134,10,0.1); color: var(--accent);
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.contact-item strong { display: block; font-size: 0.875rem; font-weight: 700; margin-bottom: 2px; }
+.contact-item p { font-size: 0.875rem; color: var(--text-muted); }
+.contact-item a { color: var(--accent); }
+.contact-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 8px; }
+.contact-map { height: 360px; border-radius: var(--radius-lg); overflow: hidden; border: 1px solid var(--border); }
+
+@media (max-width: 1024px) {
+  .features-grid { grid-template-columns: repeat(2, 1fr); }
+  .reviews-scroll { grid-template-columns: repeat(2, 1fr); }
+  .about-snippet__grid { gap: 40px; }
+}
+@media (max-width: 768px) {
+  .about-snippet__grid { grid-template-columns: 1fr; }
+  .contact-grid { grid-template-columns: 1fr; }
+  .contact-map { height: 280px; }
+  .cta-banner__inner { flex-direction: column; text-align: center; }
+  .cta-banner__actions { justify-content: center; }
+}
+@media (max-width: 600px) {
+  .features-grid { grid-template-columns: 1fr; }
+  .reviews-scroll {
+    display: flex; gap: 16px; padding-bottom: 8px;
+    overflow-x: auto; scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+  }
+  .review-card { min-width: 280px; scroll-snap-align: start; flex-shrink: 0; }
+}

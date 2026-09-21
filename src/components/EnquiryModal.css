@@ -1,0 +1,22 @@
+.modal-backdrop {
+  position: fixed; inset: 0; z-index: 2000;
+  background: rgba(0,0,0,0.5);
+  backdrop-filter: blur(4px);
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px;
+  animation: fadeIn 0.2s ease;
+}
+.modal-panel {
+  background: #fff; border-radius: var(--radius-xl);
+  width: 100%; max-width: 680px; max-height: 90vh;
+  overflow-y: auto; -webkit-overflow-scrolling: touch;
+  box-shadow: var(--shadow-xl);
+  animation: slideUp 0.3s cubic-bezier(0.4,0,0.2,1);
+}
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+@media (max-width: 480px) {
+  .modal-backdrop { padding: 0; align-items: flex-end; }
+  .modal-panel { border-radius: var(--radius-xl) var(--radius-xl) 0 0; max-height: 95vh; }
+}

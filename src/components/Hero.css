@@ -1,0 +1,66 @@
+.hero { position: relative; }
+.hero__slider-wrap { position: relative; }
+.hero__overlay-content {
+  position: absolute; inset: 0; display: flex; align-items: center;
+  z-index: 2; pointer-events: none;
+}
+.hero__overlay-content .container { pointer-events: auto; }
+.hero__text { max-width: 620px; color: #fff; }
+.hero__label {
+  display: inline-block; font-size: 0.78rem; font-weight: 700;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  background: rgba(200,134,10,0.92); color: #fff;
+  padding: 5px 14px; border-radius: var(--radius-full);
+  margin-bottom: 16px;
+}
+.hero__title {
+  font-size: clamp(1.8rem, 5vw, 3.8rem);
+  font-weight: 800; line-height: 1.05;
+  letter-spacing: -0.025em; margin-bottom: 12px;
+  text-shadow: 0 2px 24px rgba(0,0,0,0.4);
+}
+.hero__sub {
+  font-size: clamp(0.9rem, 2vw, 1.1rem);
+  color: rgba(255,255,255,0.88); margin-bottom: 16px;
+  max-width: 500px; line-height: 1.6;
+}
+.hero__owner {
+  display: flex; align-items: center; gap: 12px; margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+.hero__owner-name {
+  font-size: 1rem; font-weight: 700; color: #fff;
+  background: rgba(255,255,255,0.12); padding: 4px 12px;
+  border-radius: var(--radius-full); border: 1px solid rgba(255,255,255,0.25);
+}
+.hero__owner-loc {
+  display: flex; align-items: center; gap: 4px;
+  font-size: 0.82rem; color: rgba(255,255,255,0.75);
+}
+.hero__actions { display: flex; gap: 10px; flex-wrap: wrap; }
+.hero__outline-btn {
+  background: rgba(255,255,255,0.12);
+  border: 1.5px solid rgba(255,255,255,0.45);
+  color: #fff;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+.hero__outline-btn:hover { background: rgba(255,255,255,0.22); }
+.hero__scroll-hint {
+  display: flex; justify-content: center; padding: 14px;
+  color: var(--text-muted); animation: bounce 2s infinite;
+}
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(6px); }
+}
+@media (max-width: 768px) {
+  .hero__text { max-width: 100%; }
+  .hero__title { font-size: clamp(1.5rem, 6.5vw, 2.2rem); }
+  .hero__actions .btn-lg { padding: 11px 18px; font-size: 0.9rem; }
+}
+@media (max-width: 480px) {
+  .hero__overlay-content { align-items: flex-end; padding-bottom: 28px; }
+  .hero__sub { display: none; }
+  .hero__owner { margin-bottom: 16px; }
+}

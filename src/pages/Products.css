@@ -1,0 +1,9 @@
+.products-filter { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin-bottom: 40px; }
+.filter-btn {
+  padding: 8px 20px; border-radius: var(--radius-full);
+  font-size: 0.875rem; font-weight: 600;
+  background: var(--off-white); color: var(--text-secondary);
+  border: 1.5px solid var(--border); transition: all var(--transition-fast);
+}
+.filter-btn:hover { border-color: var(--accent); color: var(--accent); }
+.filter-btn.active { background: var(--charcoal); color: #fff; border-color: var(--charcoal); }
