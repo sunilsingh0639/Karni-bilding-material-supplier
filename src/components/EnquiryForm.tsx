@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { X, CheckCircle, Loader, MessageCircle } from 'lucide-react';
-import { products } from '../data/products';
-import { business } from '../data/business';
+import { products as staticProducts } from '../data/products';
+import { getActiveProducts } from '../services/productService';
 import { submitEnquiry } from '../services/enquiryService';
+import { useSiteSettings } from '../context/SiteSettingsContext';
 import './EnquiryForm.css';
 
 interface EnquiryFormProps {
@@ -29,10 +30,22 @@ function validate(data: FormData) {
   return errors;
 }
 
+interface ProductOption { id: string; name: string; }
+
 export default function EnquiryForm({ isModal, onClose, defaultProduct = '' }: EnquiryFormProps) {
+  const settings = useSiteSettings();
   const [form, setForm] = useState<FormData>({ ...initial, product: defaultProduct });
   const [errors, setErrors] = useState<Partial<FormData>>({});
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const [productOptions, setProductOptions] = useState<ProductOption[]>(
+    staticProducts.map(p => ({ id: p.id, name: p.name }))
+  );
+
+  useEffect(() => {
+    getActiveProducts().then(data => {
+      if (data.length > 0) setProductOptions(data.map(p => ({ id: p.id, name: p.name })));
+    }).catch(() => {/* keep static fallback */});
+  }, []);
 
   const set = (k: keyof FormData) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setForm(f => ({ ...f, [k]: e.target.value }));
@@ -52,22 +65,23 @@ export default function EnquiryForm({ isModal, onClose, defaultProduct = '' }: E
       });
       setStatus('success');
     } catch {
-      // Fallback: still show success to user (enquiry was attempted)
       setStatus('success');
     }
   };
 
   const handleReset = () => { setForm({ ...initial, product: defaultProduct }); setErrors({}); setStatus('idle'); };
 
+  const waMsg = encodeURIComponent(`Hello ${settings.owner_name}, I want to enquire about building materials/Rodi/Bajri. Please share price and availability.`);
+
   if (status === 'success') return (
     <div className="enquiry-success">
       {isModal && onClose && <button className="enquiry-close" onClick={onClose}><X size={20} /></button>}
       <CheckCircle size={56} color="var(--accent)" />
       <h3>Enquiry Submitted!</h3>
-      <p>Thank you! {business.owner} will contact you shortly on <strong>{business.phone}</strong>.</p>
+      <p>Thank you! {settings.owner_name} will contact you shortly on <strong>{settings.phone}</strong>.</p>
       <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', justifyContent: 'center' }}>
         <button className="btn btn-primary" onClick={handleReset}>Submit Another</button>
-        <a href={`https://wa.me/91${business.whatsapp}?text=${encodeURIComponent(business.whatsappMessage)}`}
+        <a href={`https://wa.me/91${settings.whatsapp}?text=${waMsg}`}
           className="btn btn-whatsapp" target="_blank" rel="noopener noreferrer">
           <MessageCircle size={16} /> WhatsApp Now
         </a>
@@ -79,8 +93,8 @@ export default function EnquiryForm({ isModal, onClose, defaultProduct = '' }: E
     <div className={`enquiry-form-wrap${isModal ? ' enquiry-form-wrap--modal' : ''}`}>
       {isModal && onClose && <button className="enquiry-close" onClick={onClose} aria-label="Close"><X size={20} /></button>}
       <div className="enquiry-form-header">
-        <h3>Send Enquiry to {business.owner}</h3>
-        <p>Fill in the details and {business.owner} will contact you shortly.</p>
+        <h3>Send Enquiry to {settings.owner_name}</h3>
+        <p>Fill in the details and {settings.owner_name} will contact you shortly.</p>
       </div>
       <form className="enquiry-form" onSubmit={handleSubmit} noValidate>
         <div className="form-row">
@@ -111,7 +125,7 @@ export default function EnquiryForm({ isModal, onClose, defaultProduct = '' }: E
             <label htmlFor="eq-product">Product *</label>
             <select id="eq-product" value={form.product} onChange={set('product')} className={errors.product ? 'error' : ''}>
               <option value="">Select product</option>
-              {products.map(p => <option key={p.id} value={p.name}>{p.name}</option>)}
+              {productOptions.map(p => <option key={p.id} value={p.name}>{p.name}</option>)}
               <option value="Other">Other</option>
             </select>
             {errors.product && <span className="form-error">{errors.product}</span>}

@@ -24,7 +24,11 @@ export async function getActiveProducts(): Promise<Product[]> {
     .select('*')
     .eq('is_active', true)
     .order('display_order', { ascending: true });
-  if (error || !data?.length) return mapStatic().filter(p => p.is_active);
+  if (error) {
+    console.warn('getActiveProducts error:', error.message);
+    return mapStatic().filter(p => p.is_active);
+  }
+  if (!data || data.length === 0) return mapStatic().filter(p => p.is_active);
   return data;
 }
 
@@ -33,7 +37,11 @@ export async function getAllProducts(): Promise<Product[]> {
     .from('products')
     .select('*')
     .order('display_order', { ascending: true });
-  if (error || !data?.length) return mapStatic();
+  if (error) {
+    console.warn('getAllProducts error:', error.message);
+    return mapStatic();
+  }
+  if (!data || data.length === 0) return mapStatic();
   return data;
 }
 

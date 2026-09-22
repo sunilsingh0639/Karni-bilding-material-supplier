@@ -5,7 +5,7 @@ export const business = {
   tagline: 'Quality Rodi, Bajri & Building Materials Delivered to Your Location',
   phone: '8003293523',
   whatsapp: '8003293523',
-  email: '[Business Email]',
+  email: 'Ganveersingh8@gmail.com',
   address: 'Gaav Parsneu, Churu, Rajasthan - 331802',
   city: 'Parsneu, Churu, Rajasthan',
   mapsUrl: 'https://maps.google.com/?q=Parsneu+Churu+Rajasthan+331802',

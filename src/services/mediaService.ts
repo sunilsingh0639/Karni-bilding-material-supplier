@@ -11,7 +11,10 @@ export async function getActiveImages(category?: string): Promise<MediaItem[]> {
     .order('display_order', { ascending: true });
   if (category) q = q.eq('category', category);
   const { data, error } = await q;
-  if (error) throw error;
+  if (error) {
+    console.warn('getActiveImages error:', error.message);
+    throw error;
+  }
   return data ?? [];
 }
 

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Phone, MessageCircle, MapPin, Star, CheckCircle, Truck, Shield, Clock } from 'lucide-react';
+import { Phone, MessageCircle, MapPin, Star, CheckCircle, Truck, Shield, Clock, Mail } from 'lucide-react';
 import Hero from '../components/Hero';
 import ProductCard from '../components/ProductCard';
 import EnquiryModal from '../components/EnquiryModal';
@@ -177,6 +177,10 @@ export default function Home() {
               <div className="contact-item">
                 <div className="contact-item__icon"><Phone size={20} /></div>
                 <div><strong>Phone / WhatsApp</strong><p><a href={`tel:${settings.phone}`}>{settings.phone}</a></p></div>
+              </div>
+              <div className="contact-item">
+                <div className="contact-item__icon"><Mail size={20} /></div>
+                <div><strong>Email</strong><p><a href={`mailto:${settings.email}`}>{settings.email}</a></p></div>
               </div>
               <div className="contact-item">
                 <div className="contact-item__icon"><Clock size={20} /></div>

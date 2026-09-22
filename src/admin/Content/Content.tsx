@@ -24,6 +24,7 @@ const SECTIONS: Section[] = [
       { key: 'owner_name', label: 'Owner Name', placeholder: 'Ganveer Singh' },
       { key: 'phone', label: 'Phone Number', placeholder: '8003293523' },
       { key: 'whatsapp', label: 'WhatsApp Number', placeholder: '8003293523' },
+      { key: 'email', label: 'Email Address', placeholder: 'Ganveersingh8@gmail.com' },
       { key: 'address', label: 'Address', placeholder: 'Gaav Parsneu, Churu, Rajasthan - 331802' },
     ],
   },

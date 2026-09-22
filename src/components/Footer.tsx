@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Phone, MessageCircle, MapPin, Clock } from 'lucide-react';
+import { Phone, MessageCircle, MapPin, Clock, Mail } from 'lucide-react';
 import { useSiteSettings } from '../context/SiteSettingsContext';
 import { business } from '../data/business';
 import './Footer.css';
@@ -59,6 +59,7 @@ export default function Footer() {
             <ul className="footer__info">
               <li><MapPin size={14} /><span>{settings.address}</span></li>
               <li><Phone size={14} /><span><a href={`tel:${settings.phone}`}>{settings.phone}</a></span></li>
+              <li><Mail size={14} /><span><a href={`mailto:${settings.email}`}>{settings.email}</a></span></li>
               <li><Clock size={14} /><span>{business.hours}</span></li>
             </ul>
             <a href={business.mapsUrl} target="_blank" rel="noopener noreferrer" className="btn btn-outline btn-sm" style={{ marginTop: 12 }}>

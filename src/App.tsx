@@ -46,20 +46,21 @@ function AdminLoader() {
 
 function PublicLayout({ children }: { children: React.ReactNode }) {
   return (
-    <SiteSettingsProvider>
+    <>
       <Header />
       <Suspense fallback={<PageLoader />}>{children}</Suspense>
       <Footer />
       <MobileBottomNav />
-    </SiteSettingsProvider>
+    </>
   );
 }
 
 export default function App() {
   return (
     <BrowserRouter>
-      <Routes>
-        {/* Admin routes — no public header/footer */}
+      <SiteSettingsProvider>
+        <Routes>
+          {/* Admin routes — no public header/footer */}
         <Route path="/admin/login" element={<Suspense fallback={<AdminLoader />}><AdminLogin /></Suspense>} />
         <Route path="/admin/dashboard" element={<ProtectedRoute><Suspense fallback={<AdminLoader />}><AdminDashboard /></Suspense></ProtectedRoute>} />
         <Route path="/admin/images" element={<ProtectedRoute><Suspense fallback={<AdminLoader />}><AdminImages /></Suspense></ProtectedRoute>} />
@@ -89,7 +90,8 @@ export default function App() {
             </main>
           </PublicLayout>
         } />
-      </Routes>
+        </Routes>
+      </SiteSettingsProvider>
     </BrowserRouter>
   );
 }

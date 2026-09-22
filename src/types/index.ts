@@ -76,6 +76,7 @@ export interface SiteSettings {
   owner_name: string;
   phone: string;
   whatsapp: string;
+  email: string;
   address: string;
   hero_title: string;
   hero_subtitle: string;

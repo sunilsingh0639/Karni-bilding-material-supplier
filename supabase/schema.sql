@@ -51,6 +51,7 @@ CREATE TABLE IF NOT EXISTS site_settings (
   owner_name TEXT DEFAULT 'Ganveer Singh',
   phone TEXT DEFAULT '8003293523',
   whatsapp TEXT DEFAULT '8003293523',
+  email TEXT DEFAULT 'Ganveersingh8@gmail.com',
   address TEXT DEFAULT 'Gaav Parsneu, Churu, Rajasthan - 331802',
   hero_title TEXT DEFAULT 'Karni Building Material Supplier',
   hero_subtitle TEXT DEFAULT 'Quality Rodi, Bajri & Building Materials Delivered to Your Location',
