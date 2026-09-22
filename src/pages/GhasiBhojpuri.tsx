@@ -1,10 +1,34 @@
+import { useState, useEffect } from 'react';
 import MusicPlayer from '../components/MusicPlayer';
 import { ghasiBhojpuri } from '../data/musicTracks';
+import type { MusicTrack } from '../data/musicTracks';
+import { getPlaylists, getTracksByPlaylist } from '../services/musicService';
 import { useScrollRevealAll } from '../hooks/useScrollReveal';
 import './MusicPage.css';
 
 export default function GhasiBhojpuri() {
+  const [tracks, setTracks] = useState<MusicTrack[]>(ghasiBhojpuri);
   useScrollRevealAll();
+
+  useEffect(() => {
+    async function load() {
+      try {
+        const playlists = await getPlaylists();
+        const pl = playlists.find(p => p.name.toLowerCase().includes('ghasi') || p.name.toLowerCase().includes('bhojpuri'));
+        if (pl) {
+          const dbTracks = await getTracksByPlaylist(pl.id);
+          if (dbTracks.length > 0) {
+            setTracks(dbTracks.map(t => ({
+              id: t.id, title: t.title, artist: t.channel_name,
+              videoId: t.youtube_video_id, thumbnail: t.thumbnail_url, duration: t.duration,
+            })));
+          }
+        }
+      } catch {/* use static fallback */}
+    }
+    load();
+  }, []);
+
   return (
     <main className="page-content">
       <section className="section">
@@ -18,11 +42,7 @@ export default function GhasiBhojpuri() {
             </div>
           </div>
           <div className="reveal">
-            <MusicPlayer tracks={ghasiBhojpuri} title="Ghasi Bhojpuri"/>
-          </div>
-          <div className="music-page-note reveal">
-            <strong>To update songs:</strong> Edit <code>src/data/musicTracks.ts</code> and replace the <code>videoId</code> values with real YouTube video IDs.
-            To enable search, add <code>VITE_YOUTUBE_API_KEY=your_key</code> to your <code>.env</code> file.
+            <MusicPlayer tracks={tracks} title="Ghasi Bhojpuri" />
           </div>
         </div>
       </section>

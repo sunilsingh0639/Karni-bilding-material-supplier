@@ -1,17 +1,31 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { X } from 'lucide-react';
 import { galleryImages, galleryCategories } from '../data/gallery';
-import type { GalleryImage } from '../data/gallery';
+import { getGalleryImages } from '../services/mediaService';
 import { useScrollRevealAll } from '../hooks/useScrollReveal';
 import './Gallery.css';
 
+interface DisplayImage { id: string; src: string; alt: string; category: string; }
+
 export default function Gallery() {
   const [cat, setCat] = useState('All');
-  const [lightbox, setLightbox] = useState<GalleryImage | null>(null);
+  const [lightbox, setLightbox] = useState<DisplayImage | null>(null);
+  const [images, setImages] = useState<DisplayImage[]>(galleryImages.map(g => ({ id: g.id, src: g.src, alt: g.alt, category: g.category })));
+  const [categories, setCategories] = useState<string[]>(galleryCategories);
   useScrollRevealAll();
 
-  const filtered = cat === 'All' ? galleryImages : galleryImages.filter(g => g.category === cat);
+  useEffect(() => {
+    getGalleryImages().then(data => {
+      if (data.length > 0) {
+        const mapped: DisplayImage[] = data.map(m => ({ id: m.id, src: m.public_url, alt: m.title, category: m.category }));
+        setImages(mapped);
+        const cats = ['All', ...Array.from(new Set(data.map(m => m.category)))];
+        setCategories(cats);
+      }
+    }).catch(() => {/* use static fallback */});
+  }, []);
 
+  const filtered = cat === 'All' ? images : images.filter(g => g.category === cat);
   const closeLightbox = useCallback(() => setLightbox(null), []);
 
   return (
@@ -25,7 +39,7 @@ export default function Gallery() {
           </div>
 
           <div className="products-filter reveal">
-            {galleryCategories.map(c => (
+            {categories.map(c => (
               <button key={c} className={`filter-btn${cat === c ? ' active' : ''}`} onClick={() => setCat(c)}>{c}</button>
             ))}
           </div>
@@ -34,9 +48,7 @@ export default function Gallery() {
             {filtered.map((img, i) => (
               <button key={img.id} className={`gallery-item reveal reveal-delay-${(i % 4) + 1}`} onClick={() => setLightbox(img)}>
                 <img src={img.src} alt={img.alt} loading="lazy" />
-                <div className="gallery-item__overlay">
-                  <span>{img.alt}</span>
-                </div>
+                <div className="gallery-item__overlay"><span>{img.alt}</span></div>
               </button>
             ))}
           </div>
@@ -47,7 +59,7 @@ export default function Gallery() {
         <div className="lightbox" onClick={closeLightbox}>
           <button className="lightbox__close" onClick={closeLightbox} aria-label="Close"><X size={24} /></button>
           <div className="lightbox__content" onClick={e => e.stopPropagation()}>
-            <img src={lightbox.src.replace('w=800', 'w=1200')} alt={lightbox.alt} />
+            <img src={lightbox.src} alt={lightbox.alt} />
             <p>{lightbox.alt}</p>
           </div>
         </div>

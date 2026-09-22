@@ -72,8 +72,6 @@ function loadYTApi(cb: () => void) {
   document.head.appendChild(s);
 }
 
-const YT_API_KEY = (import.meta.env.VITE_YOUTUBE_API_KEY as string) || '';
-
 const fmt = (s: number) => {
   if (!s || isNaN(s) || s < 0) return '0:00';
   const m = Math.floor(s / 60);
@@ -251,34 +249,44 @@ export default function MusicPlayer({ tracks, title }: Props) {
   /* ── YouTube Search ── */
   const handleSearch = async () => {
     if (!searchQuery.trim()) return;
-    if (!YT_API_KEY) {
-      setSearchError('YouTube API key not found. Make sure VITE_YOUTUBE_API_KEY is set in your .env file and restart the dev server.');
-      return;
-    }
     setSearching(true); setSearchError(null); setSearchResults([]);
     try {
-      const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&q=${encodeURIComponent(searchQuery)}&maxResults=12&key=${YT_API_KEY}`;
-      const res = await fetch(url);
-      if (!res.ok) {
-        const err = await res.json().catch(() => ({}));
-        throw new Error(err?.error?.message ?? (res.status === 403 ? 'API quota exceeded or key invalid.' : 'Search failed.'));
-      }
-      const data = await res.json();
-      setSearchResults(
-        (data.items ?? [])
+      // Use Netlify function in production; fallback to direct API in dev if key available
+      const devKey = (import.meta.env.VITE_YOUTUBE_API_KEY as string) || '';
+      const isNetlify = window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1';
+      let results: SearchResult[] = [];
+
+      if (isNetlify || !devKey) {
+        const res = await fetch(`/.netlify/functions/youtube-search?q=${encodeURIComponent(searchQuery)}`);
+        const data = await res.json();
+        if (!res.ok) throw new Error(data?.error ?? 'Search failed.');
+        results = (data.results ?? []).map((item: { videoId: string; title: string; channel: string; thumbnail: string; duration?: string }) => ({
+          videoId: item.videoId, title: item.title, channel: item.channel, thumbnail: item.thumbnail,
+        }));
+      } else {
+        // Dev mode: call YouTube API directly
+        const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&q=${encodeURIComponent(searchQuery)}&maxResults=12&key=${devKey}`;
+        const res = await fetch(url);
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({}));
+          throw new Error(err?.error?.message ?? (res.status === 403 ? 'API quota exceeded or key invalid.' : 'Search failed.'));
+        }
+        const data = await res.json();
+        results = (data.items ?? [])
           .filter((item: { id: { videoId?: string } }) => item.id?.videoId)
-          .map((item: {
-            id: { videoId: string };
-            snippet: { title: string; channelTitle: string; thumbnails: { medium?: { url: string }; default?: { url: string } } };
-          }) => ({
-            videoId: item.id.videoId,
-            title: item.snippet.title,
-            channel: item.snippet.channelTitle,
+          .map((item: { id: { videoId: string }; snippet: { title: string; channelTitle: string; thumbnails: { medium?: { url: string }; default?: { url: string } } } }) => ({
+            videoId: item.id.videoId, title: item.snippet.title, channel: item.snippet.channelTitle,
             thumbnail: item.snippet.thumbnails.medium?.url ?? item.snippet.thumbnails.default?.url ?? '',
-          }))
-      );
+          }));
+      }
+
+      if (results.length === 0) setSearchError('No music found. Try a different search.');
+      else setSearchResults(results);
     } catch (err) {
-      setSearchError(err instanceof Error ? err.message : 'Search failed. Please try again.');
+      const msg = err instanceof Error ? err.message : 'Search failed.';
+      if (msg.includes('quota')) setSearchError('YouTube API quota exceeded. Please try again later.');
+      else if (msg.includes('unavailable') || msg.includes('503') || msg.includes('network')) setSearchError('Music service is temporarily unavailable.');
+      else setSearchError(msg);
     } finally {
       setSearching(false);
     }
@@ -353,12 +361,7 @@ export default function MusicPlayer({ tracks, title }: Props) {
             <button className="mp-search-close" onClick={() => setShowSearch(false)}><X size={18} /></button>
           </div>
 
-          {!YT_API_KEY && (
-            <div className="mp-api-notice">
-              <AlertCircle size={16} />
-              <span>Add <code>VITE_YOUTUBE_API_KEY=your_key</code> to your <code>.env</code> file and restart the dev server to enable search.</span>
-            </div>
-          )}
+
           {searchError && <div className="mp-error"><AlertCircle size={14} /> {searchError}</div>}
 
           {searchResults.length > 0 && (
