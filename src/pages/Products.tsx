@@ -3,7 +3,7 @@ import ProductCard from '../components/ProductCard';
 import EnquiryModal from '../components/EnquiryModal';
 import { products } from '../data/products';
 import { useScrollRevealAll } from '../hooks/useScrollReveal';
-import './Products.css';
+import './Products.css'; 
 
 const categories = ['All', ...Array.from(new Set(products.map(p => p.category)))];
 
