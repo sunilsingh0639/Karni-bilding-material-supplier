@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { Menu, X, Phone, MessageCircle } from 'lucide-react';
-import { business } from '../data/business';
+import { useSiteSettings } from '../context/SiteSettingsContext';
 import './Header.css';
 
 const navLinks = [
@@ -12,13 +12,14 @@ const navLinks = [
   { to: '/videos', label: 'Videos' },
   { to: '/enquiry', label: 'Enquiry' },
   { to: '/track-driver-music', label: 'Track Driver Music' },
-  { to: '/ghasi-bhojpuri', label: 'Ghasi Bhojpuri' },
+  { to: '/ghasi-bhojpuri', label: 'Bhojpuri' },
 ];
 
 export default function Header() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const navigate = useNavigate();
+  const settings = useSiteSettings();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -54,7 +55,7 @@ export default function Header() {
           </nav>
 
           <div className="header__actions">
-            <a href={`tel:${business.phone}`} className="header__action-icon" aria-label="Call us">
+            <a href={`tel:${settings.phone}`} className="header__action-icon" aria-label="Call us">
               <Phone size={18} />
             </a>
             <button className="btn btn-accent btn-sm" onClick={handleQuote}>Get Quote</button>
@@ -81,10 +82,10 @@ export default function Header() {
             ))}
           </nav>
           <div className="mobile-menu__footer">
-            <a href={`tel:${business.phone}`} className="btn btn-outline" style={{ flex: 1, justifyContent: 'center' }}>
+            <a href={`tel:${settings.phone}`} className="btn btn-outline" style={{ flex: 1, justifyContent: 'center' }}>
               <Phone size={16} /> Call Now
             </a>
-            <a href={`https://wa.me/${business.whatsapp}`} className="btn btn-whatsapp" style={{ flex: 1, justifyContent: 'center' }}>
+            <a href={`https://wa.me/${settings.whatsapp}`} className="btn btn-whatsapp" style={{ flex: 1, justifyContent: 'center' }}>
               <MessageCircle size={16} /> WhatsApp
             </a>
           </div>

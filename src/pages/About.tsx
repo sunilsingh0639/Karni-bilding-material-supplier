@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { Phone, MessageCircle, CheckCircle, Users, Package, Truck } from 'lucide-react';
-import { business } from '../data/business';
+import { useSiteSettings } from '../context/SiteSettingsContext';
 import { useScrollRevealAll } from '../hooks/useScrollReveal';
 import './About.css';
 
@@ -13,7 +13,9 @@ const values = [
 
 export default function About() {
   useScrollRevealAll();
-  const waUrl = `https://wa.me/91${business.whatsapp}?text=${encodeURIComponent(business.whatsappMessage)}`;
+  const settings = useSiteSettings();
+  const waMsg = encodeURIComponent(`Hello ${settings.owner_name}, I want to enquire about building materials/Rodi/Bajri. Please share price and availability.`);
+  const waUrl = `https://wa.me/91${settings.whatsapp}?text=${waMsg}`;
 
   return (
     <main className="page-content">
@@ -22,11 +24,11 @@ export default function About() {
         <div className="container">
           <div className="about-hero__content reveal">
             <span className="section-label">About Us</span>
-            <h1>Karni Building Material Supplier</h1>
+            <h1>{settings.business_name}</h1>
             <p>Your trusted partner for premium quality Rodi, Bajri and building materials in Churu, Rajasthan. We are committed to quality, reliability and customer satisfaction.</p>
             <div className="about-hero__actions">
               <Link to="/enquiry" className="btn btn-accent btn-lg">Get Quote</Link>
-              <a href={`tel:${business.phone}`} className="btn btn-outline btn-lg"><Phone size={16} /> {business.phone}</a>
+              <a href={`tel:${settings.phone}`} className="btn btn-outline btn-lg"><Phone size={16} /> {settings.phone}</a>
             </div>
           </div>
           <div className="about-hero__img reveal reveal-delay-2">
@@ -35,30 +37,28 @@ export default function About() {
         </div>
       </section>
 
-      {/* Meet Ganveer Singh */}
+      {/* Meet Owner */}
       <section className="section">
         <div className="container">
           <div className="ganveer-section reveal">
             <div className="ganveer-photo">
-              {/* Replace with actual photo: /assets/images/ganveer-singh.jpg */}
               <img
                 src="/assets/images/ganveer-singh.jpg"
-                alt="Ganveer Singh - Karni Building Material Supplier"
+                alt={`${settings.owner_name} - ${settings.business_name}`}
                 onError={e => {
                   (e.target as HTMLImageElement).src =
-                    'https://ui-avatars.com/api/?name=Ganveer+Singh&size=400&background=1a1a1a&color=fff&bold=true';
+                    `https://ui-avatars.com/api/?name=${encodeURIComponent(settings.owner_name)}&size=400&background=1a1a1a&color=fff&bold=true`;
                 }}
                 loading="lazy"
               />
             </div>
             <div className="ganveer-info reveal reveal-delay-2">
               <span className="section-label">Meet the Owner</span>
-              <h2>Ganveer Singh</h2>
-              <p className="ganveer-tagline">Karni Building Material Supplier</p>
-              <p>Ganveer Singh runs Karni Building Material Supplier from Parsneu, Churu, Rajasthan — serving builders, contractors and homeowners with quality Rodi, Bajri and construction materials.</p>
-              <p style={{ marginTop: 12 }}>With a commitment to honest pricing, reliable supply and timely truck delivery, Ganveer Singh has built a trusted reputation in the local construction community.</p>
+              <h2>{settings.owner_name}</h2>
+              <p className="ganveer-tagline">{settings.business_name}</p>
+              <p>{settings.about_text}</p>
               <div className="ganveer-contact">
-                <a href={`tel:${business.phone}`} className="btn btn-accent"><Phone size={16} /> {business.phone}</a>
+                <a href={`tel:${settings.phone}`} className="btn btn-accent"><Phone size={16} /> {settings.phone}</a>
                 <a href={waUrl} className="btn btn-whatsapp" target="_blank" rel="noopener noreferrer">
                   <MessageCircle size={16} /> WhatsApp
                 </a>
@@ -76,7 +76,7 @@ export default function About() {
             <h2>Building Trust, One Delivery at a Time</h2>
             <p>Karni Building Material Supplier was established with a simple mission: to provide high-quality Rodi, Bajri and construction materials to builders, contractors and homeowners across Churu, Rajasthan at fair prices with reliable service.</p>
             <p>We understand that construction projects depend on timely material supply. That's why we maintain a well-stocked yard and ensure prompt truck delivery to keep your project on schedule.</p>
-            <p>Based in Gaav Parsneu, Churu — we serve the entire surrounding region with bulk and retail supply of all construction materials.</p>
+            <p>Based in {settings.address} — we serve the entire surrounding region with bulk and retail supply of all construction materials.</p>
           </div>
         </div>
       </section>
@@ -105,9 +105,9 @@ export default function About() {
         <div className="container">
           <div className="about-cta reveal">
             <h2 style={{ color: '#fff' }}>Ready to Order Materials?</h2>
-            <p style={{ color: 'rgba(255,255,255,0.7)' }}>Contact Ganveer Singh today for Rodi, Bajri and all building material requirements.</p>
+            <p style={{ color: 'rgba(255,255,255,0.7)' }}>Contact {settings.owner_name} today for Rodi, Bajri and all building material requirements.</p>
             <div className="about-cta__actions">
-              <a href={`tel:${business.phone}`} className="btn btn-accent btn-lg"><Phone size={18} /> Call Now</a>
+              <a href={`tel:${settings.phone}`} className="btn btn-accent btn-lg"><Phone size={18} /> Call Now</a>
               <a href={waUrl} className="btn btn-whatsapp btn-lg" target="_blank" rel="noopener noreferrer">
                 <MessageCircle size={18} /> WhatsApp
               </a>

@@ -37,7 +37,7 @@ export default function GhasiBhojpuri() {
             <div className="music-page-header__icon">🎵</div>
             <div>
               <span className="section-label">Bhojpuri Music</span>
-              <h1>Ghasi Bhojpuri</h1>
+              <h1>Bhojpuri</h1>
               <p>Enjoy Bhojpuri music powered by YouTube. Search songs, build your playlist and play.</p>
             </div>
           </div>

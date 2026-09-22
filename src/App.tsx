@@ -4,6 +4,7 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import MobileBottomNav from './components/MobileBottomNav';
 import ProtectedRoute from './admin/components/ProtectedRoute';
+import { SiteSettingsProvider } from './context/SiteSettingsContext';
 import './styles/globals.css';
 
 // Public pages
@@ -15,7 +16,7 @@ const Gallery = lazy(() => import('./pages/Gallery'));
 const Videos = lazy(() => import('./pages/Videos'));
 const Enquiry = lazy(() => import('./pages/Enquiry'));
 const TrackDriverMusic = lazy(() => import('./pages/TrackDriverMusic'));
-const GhasiBhojpuri = lazy(() => import('./pages/GhasiBhojpuri'));
+const Bhojpuri = lazy(() => import('./pages/GhasiBhojpuri'));
 
 // Admin pages
 const AdminLogin = lazy(() => import('./admin/Login/Login'));
@@ -45,12 +46,12 @@ function AdminLoader() {
 
 function PublicLayout({ children }: { children: React.ReactNode }) {
   return (
-    <>
+    <SiteSettingsProvider>
       <Header />
       <Suspense fallback={<PageLoader />}>{children}</Suspense>
       <Footer />
       <MobileBottomNav />
-    </>
+    </SiteSettingsProvider>
   );
 }
 
@@ -77,7 +78,7 @@ export default function App() {
         <Route path="/videos" element={<PublicLayout><Videos /></PublicLayout>} />
         <Route path="/enquiry" element={<PublicLayout><Enquiry /></PublicLayout>} />
         <Route path="/track-driver-music" element={<PublicLayout><TrackDriverMusic /></PublicLayout>} />
-        <Route path="/ghasi-bhojpuri" element={<PublicLayout><GhasiBhojpuri /></PublicLayout>} />
+        <Route path="/ghasi-bhojpuri" element={<PublicLayout><Bhojpuri /></PublicLayout>} />
         <Route path="*" element={
           <PublicLayout>
             <main className="page-content">

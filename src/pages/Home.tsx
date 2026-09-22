@@ -1,10 +1,12 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Phone, MessageCircle, MapPin, Star, CheckCircle, Truck, Shield, Clock } from 'lucide-react';
 import Hero from '../components/Hero';
 import ProductCard from '../components/ProductCard';
 import EnquiryModal from '../components/EnquiryModal';
-import { products } from '../data/products';
+import { useSiteSettings } from '../context/SiteSettingsContext';
+import { getActiveProducts } from '../services/productService';
+import { products as staticProducts } from '../data/products';
 import { business } from '../data/business';
 import { useScrollRevealAll } from '../hooks/useScrollReveal';
 import './Home.css';
@@ -23,13 +25,36 @@ const features = [
   { icon: Clock, title: 'Quick Response', desc: 'Fast enquiry response and same-day order processing.' },
 ];
 
+interface DisplayProduct {
+  id: string; name: string; category: string; description: string;
+  image: string; available: boolean; unit: string;
+}
+
+function toDisplay(p: { id: string; name: string; category: string; description: string; image_url?: string; image?: string; is_active?: boolean; available?: boolean; unit: string; }): DisplayProduct {
+  return {
+    id: p.id, name: p.name, category: p.category, description: p.description,
+    image: p.image_url ?? (p as { image?: string }).image ?? '',
+    available: p.is_active ?? (p as { available?: boolean }).available ?? true,
+    unit: p.unit,
+  };
+}
+
 export default function Home() {
   const [modalOpen, setModalOpen] = useState(false);
   const [defaultProduct, setDefaultProduct] = useState('');
+  const [products, setProducts] = useState<DisplayProduct[]>(staticProducts.map(toDisplay));
+  const settings = useSiteSettings();
   useScrollRevealAll();
 
+  useEffect(() => {
+    getActiveProducts().then(data => {
+      if (data.length > 0) setProducts(data.map(toDisplay));
+    }).catch(() => {/* keep static fallback */});
+  }, []);
+
   const openEnquiry = (product = '') => { setDefaultProduct(product); setModalOpen(true); };
-  const waUrl = `https://wa.me/91${business.whatsapp}?text=${encodeURIComponent(business.whatsappMessage)}`;
+  const waMsg = encodeURIComponent(`Hello ${settings.owner_name}, I want to enquire about building materials/Rodi/Bajri. Please share price and availability.`);
+  const waUrl = `https://wa.me/91${settings.whatsapp}?text=${waMsg}`;
 
   return (
     <main className="page-content">
@@ -78,17 +103,15 @@ export default function Home() {
         <div className="container">
           <div className="about-snippet__grid">
             <div className="about-snippet__img reveal">
-              {/* Replace with actual business photo */}
               <img src="https://images.unsplash.com/photo-1590736969955-71cc94901144?w=700&q=80" alt="Truck delivering Rodi Bajri material" loading="lazy" />
             </div>
             <div className="about-snippet__content reveal reveal-delay-2">
               <span className="section-label">About Us</span>
               <h2>Your Trusted Rodi & Bajri Supplier</h2>
-              <p><strong>{business.owner}</strong> — Karni Building Material Supplier is committed to providing premium quality Rodi, Bajri and construction materials to builders, contractors and homeowners across Churu, Rajasthan.</p>
-              <p style={{ marginTop: 12 }}>We believe in quality, reliability and customer satisfaction — delivering the right materials at the right time, directly to your site.</p>
+              <p>{settings.about_text}</p>
               <div className="about-snippet__actions">
                 <Link to="/about" className="btn btn-primary">Learn More</Link>
-                <a href={`tel:${business.phone}`} className="btn btn-outline"><Phone size={16} /> {business.phone}</a>
+                <a href={`tel:${settings.phone}`} className="btn btn-outline"><Phone size={16} /> {settings.phone}</a>
               </div>
             </div>
           </div>
@@ -126,10 +149,10 @@ export default function Home() {
           <div className="cta-banner__inner reveal">
             <div>
               <h2>Need Rodi, Bajri or Building Materials?</h2>
-              <p>Contact {business.owner} for quick pricing and delivery to your site.</p>
+              <p>Contact {settings.owner_name} for quick pricing and delivery to your site.</p>
             </div>
             <div className="cta-banner__actions">
-              <a href={`tel:${business.phone}`} className="btn btn-accent btn-lg"><Phone size={18} /> Call Now</a>
+              <a href={`tel:${settings.phone}`} className="btn btn-accent btn-lg"><Phone size={18} /> Call Now</a>
               <a href={waUrl} className="btn btn-whatsapp btn-lg" target="_blank" rel="noopener noreferrer">
                 <MessageCircle size={18} /> WhatsApp
               </a>
@@ -149,18 +172,18 @@ export default function Home() {
             <div className="contact-info reveal">
               <div className="contact-item">
                 <div className="contact-item__icon"><MapPin size={20} /></div>
-                <div><strong>{business.owner}</strong><p>{business.address}</p></div>
+                <div><strong>{settings.owner_name}</strong><p>{settings.address}</p></div>
               </div>
               <div className="contact-item">
                 <div className="contact-item__icon"><Phone size={20} /></div>
-                <div><strong>Phone / WhatsApp</strong><p><a href={`tel:${business.phone}`}>{business.phone}</a></p></div>
+                <div><strong>Phone / WhatsApp</strong><p><a href={`tel:${settings.phone}`}>{settings.phone}</a></p></div>
               </div>
               <div className="contact-item">
                 <div className="contact-item__icon"><Clock size={20} /></div>
                 <div><strong>Business Hours</strong><p>{business.hours}</p></div>
               </div>
               <div className="contact-actions">
-                <a href={`tel:${business.phone}`} className="btn btn-call"><Phone size={16} /> Call Now</a>
+                <a href={`tel:${settings.phone}`} className="btn btn-call"><Phone size={16} /> Call Now</a>
                 <a href={waUrl} className="btn btn-whatsapp" target="_blank" rel="noopener noreferrer"><MessageCircle size={16} /> WhatsApp</a>
                 <a href={business.mapsUrl} target="_blank" rel="noopener noreferrer" className="btn btn-outline"><MapPin size={16} /> Directions</a>
               </div>

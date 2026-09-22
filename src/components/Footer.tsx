@@ -1,11 +1,15 @@
 import { Link } from 'react-router-dom';
 import { Phone, MessageCircle, MapPin, Clock } from 'lucide-react';
+import { useSiteSettings } from '../context/SiteSettingsContext';
 import { business } from '../data/business';
 import './Footer.css';
 
 export default function Footer() {
+  const settings = useSiteSettings();
   const year = new Date().getFullYear();
-  const waUrl = `https://wa.me/91${business.whatsapp}?text=${encodeURIComponent(business.whatsappMessage)}`;
+  const waMsg = encodeURIComponent(`Hello ${settings.owner_name}, I want to enquire about building materials/Rodi/Bajri. Please share price and availability.`);
+  const waUrl = `https://wa.me/91${settings.whatsapp}?text=${waMsg}`;
+
   return (
     <footer className="footer">
       <div className="container">
@@ -14,13 +18,13 @@ export default function Footer() {
             <div className="footer__logo">
               <span className="footer__logo-icon">K</span>
               <div>
-                <span className="footer__logo-name">{business.name}</span>
-                <span className="footer__logo-owner">{business.owner}</span>
+                <span className="footer__logo-name">{settings.business_name}</span>
+                <span className="footer__logo-owner">{settings.owner_name}</span>
               </div>
             </div>
-            <p className="footer__tagline">{business.tagline}</p>
+            <p className="footer__tagline">{settings.hero_subtitle}</p>
             <div className="footer__contact-chips">
-              <a href={`tel:${business.phone}`} className="footer__chip"><Phone size={14} /> {business.phone}</a>
+              <a href={`tel:${settings.phone}`} className="footer__chip"><Phone size={14} /> {settings.phone}</a>
               <a href={waUrl} className="footer__chip footer__chip--wa" target="_blank" rel="noopener noreferrer">
                 <MessageCircle size={14} /> WhatsApp
               </a>
@@ -53,8 +57,8 @@ export default function Footer() {
           <div className="footer__col">
             <h4>Contact</h4>
             <ul className="footer__info">
-              <li><MapPin size={14} /><span>{business.address}</span></li>
-              <li><Phone size={14} /><span><a href={`tel:${business.phone}`}>{business.phone}</a></span></li>
+              <li><MapPin size={14} /><span>{settings.address}</span></li>
+              <li><Phone size={14} /><span><a href={`tel:${settings.phone}`}>{settings.phone}</a></span></li>
               <li><Clock size={14} /><span>{business.hours}</span></li>
             </ul>
             <a href={business.mapsUrl} target="_blank" rel="noopener noreferrer" className="btn btn-outline btn-sm" style={{ marginTop: 12 }}>
@@ -64,7 +68,7 @@ export default function Footer() {
         </div>
 
         <div className="footer__bottom">
-          <p>© {year} {business.name} · {business.owner}</p>
+          <p>{settings.footer_text || `© ${year} ${settings.business_name} · ${settings.owner_name}`}</p>
           <p>Parsneu, Churu, Rajasthan</p>
         </div>
       </div>

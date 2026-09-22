@@ -1,13 +1,23 @@
 import { Link } from 'react-router-dom';
 import { MessageCircle, ArrowRight } from 'lucide-react';
-import type { Product } from '../data/products';
-import { business } from '../data/business';
+import { useSiteSettings } from '../context/SiteSettingsContext';
 import './ProductCard.css';
 
-interface Props { product: Product; onEnquire: (name: string) => void; }
+interface ProductDisplay {
+  id: string;
+  name: string;
+  category: string;
+  description: string;
+  image: string;
+  available: boolean;
+  unit: string;
+}
+
+interface Props { product: ProductDisplay; onEnquire: (name: string) => void; }
 
 export default function ProductCard({ product, onEnquire }: Props) {
-  const waMsg = encodeURIComponent(`Hello ${business.name}, I am interested in ${product.name}. Please share price and availability.`);
+  const settings = useSiteSettings();
+  const waMsg = encodeURIComponent(`Hello ${settings.business_name}, I am interested in ${product.name}. Please share price and availability.`);
 
   return (
     <article className="product-card card">
@@ -28,7 +38,7 @@ export default function ProductCard({ product, onEnquire }: Props) {
           <button className="btn btn-primary btn-sm" onClick={() => onEnquire(product.name)}>
             Enquire Now
           </button>
-          <a href={`https://wa.me/${business.whatsapp}?text=${waMsg}`} className="btn btn-whatsapp btn-sm" target="_blank" rel="noopener noreferrer">
+          <a href={`https://wa.me/${settings.whatsapp}?text=${waMsg}`} className="btn btn-whatsapp btn-sm" target="_blank" rel="noopener noreferrer">
             <MessageCircle size={14} />
           </a>
           <Link to={`/products/${product.id}`} className="btn btn-ghost btn-sm product-card__detail-btn">
